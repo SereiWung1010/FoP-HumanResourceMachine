@@ -7,6 +7,7 @@ using namespace std;
 struct level {
 	vector<int> input;
 	vector<int> output;
+	vector<int> expectedOutput;
 };
 
 void to_lowercase(string &s) {
@@ -44,12 +45,11 @@ int main() {
 		else {
 
 	// ========================= 3 === Level 1 ========================= //
-		if (selectLevel == 1) {
 			cout << "Level 1 : " << endl;
 			int currentBlock = -1; //(2. 12/17-2:46-ZJS) 本来是 = 0； 但后续考虑到有些积木也是 0， 所以就换成 -1
 			level LevelOne;
 			LevelOne.input = {1,2};
-
+			LevelOne.expectedOutput = {1,2};
 			int numOfInstruction;
 			cout << "Enter Amount of Desired Instruction : ";
 			cin >> numOfInstruction;
@@ -57,43 +57,55 @@ int main() {
 			vector<string> Instruction(numOfInstruction);
 			for(int i = 0; i < numOfInstruction; i++) {
 				cout << i+1 << " ";
-				cin >> Instruction[i];	
+				cin >> Instruction[i];
 				// cin.ignore(); (1. 12/17-2:13-ZJS) Initially, I thought I need this when I input "Input          " and it returns "Error..."; turns out it's just my typo
 				to_lowercase(Instruction[i]); 
 				if (Instruction[i] != "inbox" && Instruction[i] != "outbox") {
-				cout << "Error on instruction " << i+1; 
-				break;
-				}
-			}
-	
-			for(int i = 0; i < numOfInstruction; i++) {
-				if (Instruction[i] == "inbox") {
-				if (LevelOne.input.size() == 0) {
-					cout << "Error! Input Chain is Empty";
+					cout << "Error on instruction " << i+1; 
 					break;
 				}
-				else {
-				currentBlock = LevelOne.input.front();
-				LevelOne.input.erase(LevelOne.input.begin());
-				cout << "inbox -> current " << currentBlock << endl; // == UI ==
-				}
+			}
+		
+			for(int i = 0; i < numOfInstruction; i++) {
+				if (Instruction[i] == "inbox") {
+					if (LevelOne.input.size() == 0) {
+						cout << "Error! Input Chain is Empty";
+						break;
+					}
+					else {
+						currentBlock = LevelOne.input.front();
+						LevelOne.input.erase(LevelOne.input.begin());
+						cout << "inbox -> current " << currentBlock << endl;
+					}
 				}
 				else if (Instruction[i] == "outbox") {
 					if (currentBlock == -1) {
-					cout << "Error! No Current Block";
-					break;
+						cout << "Error! No Current Block";
+						break;
 					} 
 					else {
-					LevelOne.output.push_back(currentBlock);
-					cout << "current -> outbox " << LevelOne.output.back() << endl; // == UI == // (3. 12/17-2:51-ZJS) 本来用 LevelOne.output[i]， 忘了 i 不能通用， size 不一样; 这种 struct+vector 最高是 .begin() .back()
+						LevelOne.output.push_back(currentBlock);
+						cout << "current -> outbox " << LevelOne.output.back() << endl; // (3. 12/17-2:51-ZJS) 本来用 LevelOne.output[i]， 忘了 i 不能通用， size 不一样; 这种 struct+vector 最高是 .begin() .back()
 					}
 				}
 			}
-		}
+			//verifying result
+				if (LevelOne.output.size() != LevelOne.expectedOutput.size()) {
+					cout << "FAIL";
+					break;
+				} 
+				for (int i = 0; i < LevelOne.output.size(); i++) {
+					if (LevelOne.output[i] != LevelOne.expectedOutput[i]) {
+						cout << "FAIL";   // mismatch found
+						break;
+					}
+					else {
+						cout << "SUCCESS";
+						break;
+					}
+				}
 		}
 	} while(selectLevel > lastLevel);
-
-	
 
 	return 0;
 }
