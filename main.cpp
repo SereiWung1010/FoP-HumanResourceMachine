@@ -8,6 +8,8 @@ struct level {
 	vector<int> input;
 	vector<int> output;
 	vector<int> expectedOutput;
+	bool success;
+	bool validProgram;
 };
 
 void to_lowercase(string &s) {
@@ -55,6 +57,8 @@ int main() {
 			cin >> numOfInstruction;
 
 			vector<string> Instruction(numOfInstruction);
+			LevelOne.validProgram = true;
+
 			for(int i = 0; i < numOfInstruction; i++) {
 				cout << i+1 << " ";
 				cin >> Instruction[i];
@@ -62,14 +66,18 @@ int main() {
 				to_lowercase(Instruction[i]); 
 				if (Instruction[i] != "inbox" && Instruction[i] != "outbox") {
 					cout << "Error on instruction " << i+1; 
+					LevelOne.validProgram = false;
 					break;
 				}
 			}
+			
+			if (!LevelOne.validProgram) return 0;
 		
 			for(int i = 0; i < numOfInstruction; i++) {
 				if (Instruction[i] == "inbox") {
 					if (LevelOne.input.size() == 0) {
 						cout << "Error! Input Chain is Empty";
+						LevelOne.validProgram = false;
 						break;
 					}
 					else {
@@ -78,32 +86,33 @@ int main() {
 						cout << "inbox -> current " << currentBlock << endl;
 					}
 				}
-				else if (Instruction[i] == "outbox") {
+				else { // (Instruction[i] == "outbox") 
 					if (currentBlock == -1) {
 						cout << "Error! No Current Block";
+						LevelOne.validProgram = false;
 						break;
 					} 
-					else {
-						LevelOne.output.push_back(currentBlock);
-						cout << "current -> outbox " << LevelOne.output.back() << endl; // (3. 12/17-2:51-ZJS) 本来用 LevelOne.output[i]， 忘了 i 不能通用， size 不一样; 这种 struct+vector 最高是 .begin() .back()
-					}
+					LevelOne.output.push_back(currentBlock);
+					currentBlock = -1;
+					cout << "current -> outbox " << LevelOne.output.back() << endl; // (3. 12/17-2:51-ZJS) 本来用 LevelOne.output[i]， 忘了 i 不能通用， size 不一样; 这种 struct+vector 最高是 .begin() .back()
 				}
 			}
+
+			if (!LevelOne.validProgram) return 0;
+
 			//verifying result
+				LevelOne.success = true;
 				if (LevelOne.output.size() != LevelOne.expectedOutput.size()) {
-					cout << "FAIL";
-					break;
+					LevelOne.success = false;
 				} 
 				for (int i = 0; i < LevelOne.output.size(); i++) {
 					if (LevelOne.output[i] != LevelOne.expectedOutput[i]) {
-						cout << "FAIL";   // mismatch found
-						break;
-					}
-					else {
-						cout << "SUCCESS";
+						LevelOne.success = false;   // mismatch found
 						break;
 					}
 				}
+
+				cout << (LevelOne.success ? "SUCCESS" : "FAIL");
 		}
 	} while(selectLevel > lastLevel);
 
