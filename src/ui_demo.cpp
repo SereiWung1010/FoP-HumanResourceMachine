@@ -10,9 +10,9 @@ int main() {
     UI::GameState state;
     state.input = {5, 10, -3, 42, 0, 99};
     state.output = {15, 20, 25};
-    state.field = {1, 2, 3, 4};
+    state.field = {1, 2, -100, 4};
     state.code = {"MOV", "ADD", "JMP"};
-    state.currentBlock = -1;
+    state.currentBlock = -100;
     state.currentCommand = 0;
     state.level = 3;
 
@@ -20,11 +20,12 @@ int main() {
     ui.clearScreen();
     ui.displayUI();
 
+    ui.moveTo(-1);
     ui.setCurrentBlock(5);
     ui.setInput({10, -3, 42, 0, 99});
     ui.moveTo(4);
     ui.setOutput({15, 20, 25, 5});
-    ui.setCurrentBlock(-1);
+    ui.setCurrentBlock(-100);
     ui.moveTo(0);
     ui.setCurrentCommand(1);
 

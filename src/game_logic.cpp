@@ -6,6 +6,8 @@
 #include <cctype> // tolower()
 #include <algorithm> //find()
 #include <fstream>
+#include <thread>
+#include <chrono>
 // #include <limits> //cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 后期发现是电脑问题，并不需要这个
 using namespace std;
 
@@ -69,6 +71,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
     uiState.currentCommand = 0;
     uiState.level = lvl.currentLevel;
     ui.setGameState(uiState);
+    ui.clearScreen();
     ui.displayUI();
 
     // ===== execute =====
@@ -79,6 +82,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
         // 显示当前正在执行的指令
         uiState.currentCommand = ip;
         ui.setGameState(uiState);
+        ui.clearScreen();
         ui.displayUI();
         
 		string cmd = Instruction[ip];
@@ -97,7 +101,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             uiState.input = input;
             uiState.currentBlock = currentBlock;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(-1);
 		}
 		else if (cmd == "outbox") {
 			if (!hasCurrentBlock) {
@@ -113,7 +118,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             // 更新输出队列显示
             uiState.output = output;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(4);
 		}
 		else if (cmd == "add") {
 			int X;
@@ -128,7 +134,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             // 更新当前方块数值显示
             uiState.currentBlock = currentBlock;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(X);
 		}
 		else if (cmd == "sub") {
 			int X;
@@ -143,7 +150,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             // 更新当前方块数值显示
             uiState.currentBlock = currentBlock;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(X);
 		}
 		else if (cmd == "copyto") {
 			int X;
@@ -159,7 +167,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             // 更新地板格子显示
             uiState.field = floor;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(X);
 		}
 		else if (cmd == "copyfrom") {
 			int X;
@@ -174,7 +183,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             // 更新当前方块数值显示
             uiState.currentBlock = currentBlock;
             ui.setGameState(uiState);
-            ui.displayUI();
+            ui.clearScreen();
+            ui.moveTo(X);
 		}
 		else if (cmd == "jump") {
 			int X;
@@ -183,7 +193,19 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
 			}
-			ip = X-1; //之后有 ip++ ，但只有不用 jump 时才会加，所以提前减之后加就扯平了
+            
+            // ===== jump执行前更新UI =====
+            // 高亮显示要跳转到的指令
+            uiState.currentCommand = X-1; // X-1 because instructions are 1-indexed in input but 0-indexed in array
+            ui.setGameState(uiState);
+            ui.clearScreen();
+            ui.displayUI();
+            
+            // 短暂暂停让玩家看到跳转目标
+            this_thread::sleep_for(chrono::milliseconds(500));
+            
+            ip = X-1; //之后有 ip++ ，但只有不用 jump 时才会加，所以提前减之后加就扯平了
+            ui.clearScreen();
 			continue;
 		}
 		else if (cmd == "jumpifzero") {
@@ -198,7 +220,18 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 				return FAIL;
 			}
 			else if (currentBlock == 0) {
+                // ===== jumpifzero执行前更新UI =====
+                // 高亮显示要跳转到的指令
+                uiState.currentCommand = X-1;
+                ui.setGameState(uiState);
+                ui.clearScreen();
+                ui.displayUI();
+                
+                // 短暂暂停让玩家看到跳转目标
+                this_thread::sleep_for(chrono::milliseconds(500));
+                
 				ip = X-1;
+                ui.clearScreen();
 				continue;
 			}
 		}

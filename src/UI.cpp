@@ -19,58 +19,58 @@ void UI::setGameState(const GameState& newState) {
 
 void UI::setInput(const std::vector<int>& input) {
     state.input = input;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 void UI::setOutput(const std::vector<int>& output) {
     state.output = output;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 void UI::setField(const vector<int>& field) {
     state.field = field;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(std::chrono::milliseconds(200));
+    this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 void UI::setCode(const vector<string>& code) {
     state.code = code;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 void UI::setCurrentBlock(int currentBlock) {
     state.currentBlock = currentBlock;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 void UI::setCurrentCommand(int currentCommand) {
     state.currentCommand = currentCommand;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    std::this_thread::sleep_for(chrono::milliseconds(200));
+    std::this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 void UI::setLevel(int level) {
     state.level = level;
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(200));
+    this_thread::sleep_for(chrono::milliseconds(500));
 }
 
 vector<string> UI::returnCommandContent(int max) {
@@ -88,9 +88,15 @@ vector<string> UI::returnCommandContent(int max) {
 } 
 
 string UI::formatInt(int value) {
-    string s = to_string(value);
-    if (s.length() >= 3) {
-        return s.substr(0, 3);
+    string s;
+
+    if (value == -100) {
+        s = "   ";
+    } else { 
+        s = to_string(value);
+        if (s.length() >= 3) {
+            return s.substr(0, 3);
+        }
     }
     
     int totalPadding = 3 - s.length();
@@ -113,6 +119,8 @@ int convertPosToCoord(int pos) {
         return (pos * 6);
     } else if (pos == 4) {
         return 25;
+    } else if (pos == -1) {
+        return -5;
     } else {
         return 0;
     }
@@ -152,13 +160,6 @@ void UI::displayUI() {
     vector<std::string> fieldContent = formatIntVector(state.field, 4);
     vector<std::string> commandContent = returnCommandContent(17);
 
-    string currentBlockContent;
-    if (state.currentBlock >= 0) {
-        currentBlockContent = formatInt(state.currentBlock);
-    } else {
-        currentBlockContent = "   ";
-    }
-
     cout << "Level information: " << state.level;
     cout << std::string(4, '\n');
 
@@ -169,7 +170,7 @@ void UI::displayUI() {
 
     cout << "IN" 
               << string(3, ' ') << "|" << inputContent[0] << "|"
-              << string(5 + state.xCoord, ' ') << "|" << currentBlockContent << "|"
+              << string(5 + state.xCoord, ' ') << "|" << formatInt(state.currentBlock) << "|"
               << string(25 - state.xCoord, ' ') << "|" << outputContent[0] << "|"
               << "  OUT"
               << string(3, ' ') << "| "
