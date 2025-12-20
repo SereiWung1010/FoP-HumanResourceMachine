@@ -3,18 +3,17 @@
 
 #include <vector> // vector
 #include <string> // string
-using namespace std;
 
 enum LevelStatus { SUCCESS, FAIL, INSTRUCTION_ERROR };
 
 struct level {
-	vector<int> input;
-	vector<int> expectedOutput;
+	std::vector<int> input;
+	std::vector<int> expectedOutput;
 
-	vector<int> floor; // consider using an array
-	vector<bool> floorAvailable;
+	std::vector<int> floor; // consider using an array
+	std::vector<bool> floorAvailable;
 
-	vector<string> instructionAvailable;
+	std::vector<std::string> instructionAvailable;
     int currentLevel;
 
 };
