@@ -34,13 +34,18 @@ LevelStatus playLevel(const level &lvl) {
 	int currentBlock = 0;
 
 	int n; //numOfInstruction
-	cout << "Enter Amount of Desired Instruction : ";
-	while (!(cin >> n) || n <= 0) {  // validate input
+	while (true) {  // validate input
+		cout << "Enter Amount of Desired Instruction : ";
+		if (!(cin >> n) || n <= 0) {
 		cout << "Please enter a positive number\n";
 		cin.clear();
 		cin.ignore(10000, '\n');
+		}
+		else {
+			cin.ignore(10000, '\n'); // consume leftover newline
+			break;
+		}
 	}
-	cin.ignore(10000, '\n'); // consume leftover newline
 
 	vector<string> Instruction(n);
 	
@@ -77,10 +82,17 @@ LevelStatus playLevel(const level &lvl) {
 	int ip = 0; // ip for instruction pointer
 	while (ip < Instruction.size()) {
 		string cmd = Instruction[ip];
+		int X = -1; // 代表没 argument
+		// 本来是 nested cin cmd {cin >> X} 既然没跑起来； 后来发现是压根就没把那 X 拉进去； 上网搜到这种写法； 下面我解释一下代码逻辑
+		size_t pos = cmd.find(' '); // find the first space (ideally, 就 add 0) 就一个 space； 并返回 position
+		if (pos != string::npos) { // there is a space; npos 代表 no space
+			X = stoi(cmd.substr(pos + 1)); // stoi 可以理解为 s(string) to i(int); (..) 里面是 cin >> cmd 拿出 space 之后的 number string (这里需要 convert to int) 放到 X 里代表 argument
+ 			cmd = cmd.substr(0, pos); // 剩下 cmd 就是 0 到 space 之间的 string; 用 ().substr 来拉出
+ 		}
+
 		if (cmd == "inbox") {
 			if (input.empty()) {
-				cout << "Error! Input Chain is Empty\n";
-				return FAIL;
+				return SUCCESS;
 			}
 			currentBlock = input.front();
 			input.erase(input.begin());
@@ -98,8 +110,6 @@ LevelStatus playLevel(const level &lvl) {
 			hasCurrentBlock = false;
 		}
 		else if (cmd == "add") {
-			int X;
-			cin >> X;
 			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X] == true) { // 思路： X (start from 0) >= floor.size()  -> X号空地不存在
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
@@ -107,8 +117,6 @@ LevelStatus playLevel(const level &lvl) {
 			currentBlock += floor[X];
 		}
 		else if (cmd == "sub") {
-			int X;
-			cin >> X;
 			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X] == true) {
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
@@ -116,8 +124,6 @@ LevelStatus playLevel(const level &lvl) {
 			currentBlock -= floor[X];
 		}
 		else if (cmd == "copyto") {
-			int X;
-			cin >> X;
 			if(!hasCurrentBlock || X < 0 || X >= floor.size()) {
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
@@ -126,17 +132,14 @@ LevelStatus playLevel(const level &lvl) {
 			floorAvailable[X] = false;
 		}
 		else if (cmd == "copyfrom") {
-			int X;
-			cin >> X;
 			if (X < 0 || X >= floor.size() || floorAvailable[X] == true) {
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
 			}
 			currentBlock = floor[X];
+			hasCurrentBlock = true;
 		}
 		else if (cmd == "jump") {
-			int X;
-			cin >> X;
 			if (X < 1 || X >= Instruction.size()) { // 这里至少有另外1个 instruction 才能 loop 回去
 				cout << "Error! Invalid Operation\n";
 				return FAIL;
@@ -145,8 +148,6 @@ LevelStatus playLevel(const level &lvl) {
 			continue;
 		}
 		else if (cmd == "jumpifzero") {
-			int X;
-			cin >> X;
 			if (!hasCurrentBlock) { // no currentBlock to determine jump or not
 				cout << "Error! Where's the Current BLOCK!!!";
 				return FAIL;
