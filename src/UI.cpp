@@ -19,58 +19,58 @@ void UI::setGameState(const GameState& newState) {
 
 void UI::setInput(const std::vector<int>& input) {
     state.input = input;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 void UI::setOutput(const std::vector<int>& output) {
     state.output = output;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 void UI::setField(const vector<int>& field) {
     state.field = field;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(std::chrono::milliseconds(500));
+    this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 void UI::setCode(const vector<string>& code) {
     state.code = code;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 void UI::setCurrentBlock(int currentBlock) {
     state.currentBlock = currentBlock;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 void UI::setCurrentCommand(int currentCommand) {
     state.currentCommand = currentCommand;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    std::this_thread::sleep_for(chrono::milliseconds(500));
+    std::this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 void UI::setLevel(int level) {
     state.level = level;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
     clearScreen();
     displayUI();
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(200));
 }
 
 vector<string> UI::returnCommandContent(int max) {

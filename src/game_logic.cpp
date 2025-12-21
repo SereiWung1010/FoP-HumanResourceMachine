@@ -80,8 +80,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 	while (ip < Instruction.size()) {
         // ===== 在执行指令前更新UI =====
         // 显示当前正在执行的指令
-        uiState.currentCommand = ip;
-        ui.setGameState(uiState);
+        ui.setCurrentCommand(ip);
         ui.clearScreen();
         ui.displayUI();
         
@@ -98,11 +97,10 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== inbox执行后更新UI =====
             // 更新输入队列和当前方块显示
-            uiState.input = input;
-            uiState.currentBlock = currentBlock;
-            ui.setGameState(uiState);
-            ui.clearScreen();
-            ui.moveTo(-1);
+			ui.clearScreen();
+			ui.moveTo(-1);
+            ui.setInput(input);
+            ui.setCurrentBlock(currentBlock);
 		}
 		else if (cmd == "outbox") {
 			if (!hasCurrentBlock) {
@@ -116,10 +114,9 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== outbox执行后更新UI =====
             // 更新输出队列显示
-            uiState.output = output;
-            ui.setGameState(uiState);
-            ui.clearScreen();
-            ui.moveTo(4);
+			ui.clearScreen();
+			ui.moveTo(4);
+            ui.setOutput(output);
 		}
 		else if (cmd == "add") {
 			int X;
@@ -132,8 +129,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== add执行后更新UI =====
             // 更新当前方块数值显示
-            uiState.currentBlock = currentBlock;
-            ui.setGameState(uiState);
+            ui.setCurrentBlock(currentBlock);
             ui.clearScreen();
             ui.moveTo(X);
 		}
@@ -148,10 +144,9 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== sub执行后更新UI =====
             // 更新当前方块数值显示
-            uiState.currentBlock = currentBlock;
-            ui.setGameState(uiState);
-            ui.clearScreen();
+			ui.clearScreen();
             ui.moveTo(X);
+            ui.setCurrentBlock(currentBlock);
 		}
 		else if (cmd == "copyto") {
 			int X;
@@ -165,10 +160,9 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== copyto执行后更新UI =====
             // 更新地板格子显示
-            uiState.field = floor;
-            ui.setGameState(uiState);
-            ui.clearScreen();
+			ui.clearScreen();
             ui.moveTo(X);
+            ui.setField(floor);
 		}
 		else if (cmd == "copyfrom") {
 			int X;
@@ -181,10 +175,9 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== copyfrom执行后更新UI =====
             // 更新当前方块数值显示
-            uiState.currentBlock = currentBlock;
-            ui.setGameState(uiState);
-            ui.clearScreen();
+			ui.clearScreen();
             ui.moveTo(X);
+            ui.setCurrentBlock(currentBlock);
 		}
 		else if (cmd == "jump") {
 			int X;
@@ -196,8 +189,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             
             // ===== jump执行前更新UI =====
             // 高亮显示要跳转到的指令
-            uiState.currentCommand = X-1; // X-1 because instructions are 1-indexed in input but 0-indexed in array
-            ui.setGameState(uiState);
+            ui.setCurrentCommand(X-1); // X-1 because instructions are 1-indexed in input but 0-indexed in array
             ui.clearScreen();
             ui.displayUI();
             
@@ -222,8 +214,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 			else if (currentBlock == 0) {
                 // ===== jumpifzero执行前更新UI =====
                 // 高亮显示要跳转到的指令
-                uiState.currentCommand = X-1;
-                ui.setGameState(uiState);
+                ui.setCurrentCommand(X-1);
                 ui.clearScreen();
                 ui.displayUI();
                 

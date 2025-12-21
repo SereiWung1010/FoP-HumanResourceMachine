@@ -32,6 +32,22 @@ int getLastLevel() {
     }
 }
 
+void setGameState(const level &lvl, UI& ui) {
+	// ===== 设置UI初始状态 =====
+    // 创建UI状态对象并初始化
+    UI::GameState uiState;
+    uiState.input = lvl.input;
+    uiState.output = {};
+    uiState.field = lvl.floor;
+    uiState.code ={};
+    uiState.currentBlock = 0;
+    uiState.currentCommand = 0;
+    uiState.level = lvl.currentLevel;
+    ui.setGameState(uiState);
+    ui.clearScreen();
+    ui.displayUI();
+}
+
 int main() {
     UI ui;  // 创建UI对象用于显示游戏界面
 
@@ -84,6 +100,7 @@ int main() {
 			LevelOne.floorAvailable = {};
             LevelOne.currentLevel = 1;
 
+			setGameState(LevelOne, ui);
 			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
 			LevelStatus result = playLevel(LevelOne, ui); // 传递UI对象给游戏逻辑
 			if (result == SUCCESS) {
@@ -96,7 +113,7 @@ int main() {
 
 		// ========================= 4 === Level 2 ========================= //
 		if (selectLevel == 2) {
-			cout << "Level 2 :" << endl;
+			cout << "\nLevel 2 :" << endl;
 
 			level LevelTwo;
 			LevelTwo.input = {3, 9, 5, 1, -2, -2, 9, -9};
@@ -106,6 +123,7 @@ int main() {
 			LevelTwo.floorAvailable = {true, true, true};
             LevelTwo.currentLevel = 2;
 
+			setGameState(LevelTwo, ui);
 			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
 			LevelStatus result = playLevel(LevelTwo, ui); // 传递UI对象给游戏逻辑
 			if (result == SUCCESS) {
@@ -118,7 +136,7 @@ int main() {
 
 		// ========================= 5 === Level 3 ========================= //
 		if (selectLevel == 3) {
-			cout << "Level 3 :" << endl;
+			cout << "\nLevel 3 :" << endl;
 
 			level LevelThree;
 			LevelThree.input = {6, 2, 7, 7, -9, 3, -3, -3};
@@ -128,6 +146,7 @@ int main() {
 			LevelThree.floorAvailable = {true, true, true};
             LevelThree.currentLevel = 3;
 
+			setGameState(LevelThree, ui);
 			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
 			LevelStatus result = playLevel(LevelThree, ui); // 传递UI对象给游戏逻辑
 			if (result == SUCCESS) {
