@@ -194,7 +194,7 @@ int main() {
 	cout << "\t" << "|_______|" << "\t" << "|_______|" << "\t" << "|_______|" << "\t" << "|_______|" << endl;
 
 	int selectLevel;
-	int lastLevel = 4;   // Later update with data store in file;
+	int lastLevel = 1;   // Later update with data store in file;
 
 	while (true) {
 		cout << "\nPlease Select Your Level : ";
