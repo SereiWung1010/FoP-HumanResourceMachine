@@ -92,8 +92,11 @@ LevelStatus playLevel(const level &lvl) {
 
 		if (cmd == "inbox") {
 			if (input.empty()) {
-				return SUCCESS;
-			}
+                if(output == lvl.expectedOutput){
+					return SUCCESS;
+				}
+				else return FAIL;
+            }
 			currentBlock = input.front();
 			input.erase(input.begin());
 			//cout << "inbox -> current " << currentBlock << endl;
@@ -101,8 +104,8 @@ LevelStatus playLevel(const level &lvl) {
 		}
 		else if (cmd == "outbox") {
 			if (!hasCurrentBlock) {
-				cout << "Error! No Current Block\n";
-				return FAIL;
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			output.push_back(currentBlock);
 			//cout << "current -> outbox " << output.back() << endl;
@@ -110,53 +113,49 @@ LevelStatus playLevel(const level &lvl) {
 			hasCurrentBlock = false;
 		}
 		else if (cmd == "add") {
-			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X] == true) { // 思路： X (start from 0) >= floor.size()  -> X号空地不存在
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
+			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X]) { // 思路： X (start from 0) >= floor.size()  -> X号空地不存在
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			currentBlock += floor[X];
 		}
 		else if (cmd == "sub") {
-			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X] == true) {
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
+			if (!hasCurrentBlock || X < 0 || X >= floor.size() || floorAvailable[X]) {
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			currentBlock -= floor[X];
 		}
 		else if (cmd == "copyto") {
 			if(!hasCurrentBlock || X < 0 || X >= floor.size()) {
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			floor[X] = currentBlock;
 			floorAvailable[X] = false;
 		}
 		else if (cmd == "copyfrom") {
-			if (X < 0 || X >= floor.size() || floorAvailable[X] == true) {
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
+			if (X < 0 || X >= floor.size() || floorAvailable[X]) {
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			currentBlock = floor[X];
 			hasCurrentBlock = true;
 		}
 		else if (cmd == "jump") {
 			if (X < 1 || X >= Instruction.size()) { // 这里至少有另外1个 instruction 才能 loop 回去
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			}
 			ip = X-1; //之后有 ip++ ，但只有不用 jump 时才会加，所以提前减之后加就扯平了
 			continue;
 		}
 		else if (cmd == "jumpifzero") {
-			if (!hasCurrentBlock) { // no currentBlock to determine jump or not
-				cout << "Error! Where's the Current BLOCK!!!";
-				return FAIL;
+			if (!hasCurrentBlock || X < 1 || X >= Instruction.size()) { // no currentBlock to determine jump or not
+				cout << "Error on instruction " << ip + 1 << endl;
+				return INSTRUCTION_ERROR;
 			} 
-			else if (X < 1 || X >= Instruction.size()) { 
-				cout << "Error! Invalid Operation\n";
-				return FAIL;
-			}
-			else if (currentBlock == 0) {
+			if (currentBlock == 0) {
 				ip = X-1;
 				continue;
 			}
@@ -232,70 +231,55 @@ int main() {
 			continue;
 		}
 
+		level currentLevel;
 		// ========================= 3 === Level 1 ========================= //
 		if (selectLevel == 1) {
 			cout << "Level 1 :" << endl;
 
-			level LevelOne;
-			LevelOne.input = {1, 2};
-			LevelOne.expectedOutput = {1, 2};
-			LevelOne.instructionAvailable = {"inbox", "outbox"};
-			LevelOne.floor = {};
-			LevelOne.floorAvailable = {};
-
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelOne);
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 2; //last level here 代表 not completed yet, you were here, now continue
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.input = {1, 2};
+			currentLevel.expectedOutput = {1, 2};
+			currentLevel.instructionAvailable = {"inbox", "outbox"};
+			currentLevel.floor = {};
+			currentLevel.floorAvailable = {};
 		}
 
 		// ========================= 4 === Level 2 ========================= //
 		if (selectLevel == 2) {
 			cout << "Level 2 :" << endl;
 
-			level LevelTwo;
-			LevelTwo.input = {3, 9, 5, 1, -2, -2, 9, -9};
-			LevelTwo.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
-			LevelTwo.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelTwo.floor = {0,0,0};
-			LevelTwo.floorAvailable = {true, true, true};
-
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelTwo);
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 3;
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.input = {3, 9, 5, 1, -2, -2, 9, -9};
+			currentLevel.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0,0};
+			currentLevel.floorAvailable = {true, true, true};
 		}
 
 		// ========================= 5 === Level 3 ========================= //
 		if (selectLevel == 3) {
 			cout << "Level 3 :" << endl;
 
-			level LevelThree;
-			LevelThree.input = {6, 2, 7, 7, -9, 3, -3, -3};
-			LevelThree.expectedOutput = {7, -3};
-			LevelThree.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelThree.floor = {0,0,0};
-			LevelThree.floorAvailable = {true, true, true};
-
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelThree);
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 4;
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.input = {6, 2, 7, 7, -9, 3, -3, -3};
+			currentLevel.expectedOutput = {7, -3};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0,0};
+			currentLevel.floorAvailable = {true, true, true};
 		}		
 
 		// ========================= 6 === Level 4 ========================= //
+
+
+
+
+
+	//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
+	LevelStatus result = playLevel(currentLevel);
+	if (result == SUCCESS) {
+		cout << "SUCCESS" << endl;
+		lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
+	} else if (result == FAIL) {
+		cout << "FAIL" << endl;
 	}
+	}
+
 	return 0;
 }
