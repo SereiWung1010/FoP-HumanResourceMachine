@@ -92,10 +92,7 @@ LevelStatus playLevel(const level &lvl) {
 
 		if (cmd == "inbox") {
 			if (input.empty()) {
-                if(output == lvl.expectedOutput){
-					return SUCCESS;
-				}
-				else return FAIL;
+                break;
             }
 			currentBlock = input.front();
 			input.erase(input.begin());
@@ -197,7 +194,7 @@ int main() {
 	cout << "\t" << "|_______|" << "\t" << "|_______|" << "\t" << "|_______|" << "\t" << "|_______|" << endl;
 
 	int selectLevel;
-	int lastLevel = 1;   // Later update with data store in file;
+	int lastLevel = 4;   // Later update with data store in file;
 
 	while (true) {
 		cout << "\nPlease Select Your Level : ";
@@ -266,18 +263,23 @@ int main() {
 		}		
 
 		// ========================= 6 === Level 4 ========================= //
+		if (selectLevel == 4) {
+			cout << "Level 4 :" << endl;
 
-
-
-
+			currentLevel.input = {5, 3, 8, 2, -4};
+			currentLevel.expectedOutput = {-2, 5, -6, -6};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0};
+			currentLevel.floorAvailable = {true,true};
+		}	
 
 	//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
 	LevelStatus result = playLevel(currentLevel);
 	if (result == SUCCESS) {
-		cout << "SUCCESS" << endl;
-		lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
+		cout << "Success" << endl;
+ 		lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
 	} else if (result == FAIL) {
-		cout << "FAIL" << endl;
+		cout << "Fail" << endl;
 	}
 	}
 
