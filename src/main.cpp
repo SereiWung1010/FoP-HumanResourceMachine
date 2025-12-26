@@ -50,6 +50,7 @@ void setGameState(const level &lvl, UI& ui) {
 
 int main() {
     UI ui;  // 创建UI对象用于显示游戏界面
+	level currentLevel;
 
 	// ========================= 1 === Intro Interface / Level Selection ========================= //
 
@@ -91,73 +92,55 @@ int main() {
 		// ========================= 3 === Level 1 ========================= //
 		if (selectLevel == 1) {
 			cout << "\nLevel 1 :" << endl;
-
-			level LevelOne;
-			LevelOne.input = {1, 2};
-			LevelOne.expectedOutput = {1, 2};
-			LevelOne.instructionAvailable = {"inbox", "outbox"};
-			LevelOne.floor = {};
-			LevelOne.floorAvailable = {};
-            LevelOne.currentLevel = 1;
-
-			setGameState(LevelOne, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelOne, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 2; //last level here 代表 not completed yet, you were here, now continue
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.input = {1, 2};
+			currentLevel.expectedOutput = {1, 2};
+			currentLevel.instructionAvailable = {"inbox", "outbox"};
+			currentLevel.floor = {};
+			currentLevel.floorAvailable = {};
+			setGameState(currentLevel, ui);
 		}
 
 		// ========================= 4 === Level 2 ========================= //
 		if (selectLevel == 2) {
 			cout << "\nLevel 2 :" << endl;
-
-			level LevelTwo;
-			LevelTwo.input = {3, 9, 5, 1, -2, -2, 9, -9};
-			LevelTwo.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
-			LevelTwo.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelTwo.floor = {0,0,0};
-			LevelTwo.floorAvailable = {true, true, true};
-            LevelTwo.currentLevel = 2;
-
-			setGameState(LevelTwo, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelTwo, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 3;
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.input = {3, 9, 5, 1, -2, -2, 9, -9};
+			currentLevel.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0,0};
+			currentLevel.floorAvailable = {true, true, true};
+			setGameState(currentLevel, ui);
 		}
 
 		// ========================= 5 === Level 3 ========================= //
 		if (selectLevel == 3) {
 			cout << "\nLevel 3 :" << endl;
-
-			level LevelThree;
-			LevelThree.input = {6, 2, 7, 7, -9, 3, -3, -3};
-			LevelThree.expectedOutput = {7, -3};
-			LevelThree.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelThree.floor = {0,0,0};
-			LevelThree.floorAvailable = {true, true, true};
-            LevelThree.currentLevel = 3;
-
-			setGameState(LevelThree, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelThree, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "\nSUCCESS" << endl;
-				lastLevel = 4;
-			} else if (result == FAIL) {
-				cout << "\nFAIL" << endl;
-			}
+			currentLevel.input = {6, 2, 7, 7, -9, 3, -3, -3};
+			currentLevel.expectedOutput = {7, -3};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0,0};
+			currentLevel.floorAvailable = {true, true, true};
+			setGameState(currentLevel, ui);
 		}		
 
 		// ========================= 6 === Level 4 ========================= //
+		if (selectLevel == 4) {
+			cout << "Level 4 :" << endl;
+			currentLevel.input = {5, 3, 8, 2, -4};
+			currentLevel.expectedOutput = {-2, 5, -6, -6};
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {0,0};
+			currentLevel.floorAvailable = {true,true};
+			setGameState(currentLevel, ui);
+		}	
+
+		LevelStatus result = playLevel(currentLevel, ui);
+
+		if (result == SUCCESS) {
+			cout << "Success" << endl;
+			lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
+		} else if (result == FAIL) {
+			cout << "Fail" << endl;
+		}
 	}
 	return 0;
 }
