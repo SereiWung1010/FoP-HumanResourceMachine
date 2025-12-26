@@ -36,11 +36,12 @@ void setGameState(const level &lvl, UI& ui) {
 	// ===== 设置UI初始状态 =====
     // 创建UI状态对象并初始化
     UI::GameState uiState;
+	uiState.instruction = lvl.instruction;
     uiState.input = lvl.input;
     uiState.output = {};
     uiState.field = lvl.floor;
     uiState.code ={};
-    uiState.currentBlock = -100;
+    uiState.currentBlock = -10000;
     uiState.currentCommand = 0;
     uiState.level = lvl.currentLevel;
     ui.setGameState(uiState);
@@ -92,11 +93,12 @@ int main() {
 		// ========================= 3 === Level 1 ========================= //
 		if (selectLevel == 1) {
 			cout << "\nLevel 1 :" << endl;
+			currentLevel.instruction = "让机器人取出输入序列上的每个积木放入输出序列中。\n\n可用指令集：inbox, outbox\n\n可用空地数：0";
 			currentLevel.input = {1, 2};
 			currentLevel.expectedOutput = {1, 2};
 			currentLevel.instructionAvailable = {"inbox", "outbox"};
-			currentLevel.floor = {};
-			currentLevel.floorAvailable = {};
+			currentLevel.floor = {-100000, -100000, -100000, -100000};
+			currentLevel.floorAvailable = {false, false, false, false};
 			currentLevel.currentLevel = 1;
 			setGameState(currentLevel, ui);
 		}
@@ -104,11 +106,12 @@ int main() {
 		// ========================= 4 === Level 2 ========================= //
 		if (selectLevel == 2) {
 			cout << "\nLevel 2 :" << endl;
+			currentLevel.instruction = "对于输入序列中的每两个东西，先把第1个减去第2个，并把结果放在输出序列中，然后把第2个减去第1个，再把结果放在输出序列中，重复。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
 			currentLevel.input = {3, 9, 5, 1, -2, -2, 9, -9};
 			currentLevel.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			currentLevel.floor = {0,0,0};
-			currentLevel.floorAvailable = {true, true, true};
+			currentLevel.floor = {-10000,-10000,-10000, -100000};
+			currentLevel.floorAvailable = {true, true, true, false};
 			currentLevel.currentLevel = 2;
 			setGameState(currentLevel, ui);
 		}
@@ -116,10 +119,11 @@ int main() {
 		// ========================= 5 === Level 3 ========================= //
 		if (selectLevel == 3) {
 			cout << "\nLevel 3 :" << endl;
+			currentLevel.instruction = "从输入序列中依次取2个数字，如果相等则将其中一个输出，否则扔掉。重复这个过程直到输入传送带为空。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
 			currentLevel.input = {6, 2, 7, 7, -9, 3, -3, -3};
 			currentLevel.expectedOutput = {7, -3};
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			currentLevel.floor = {0,0,0};
+			currentLevel.floor = {-10000,-10000,-10000, -100000};
 			currentLevel.floorAvailable = {true, true, true};
 			currentLevel.currentLevel = 3;
 			setGameState(currentLevel, ui);
@@ -128,11 +132,12 @@ int main() {
 		// ========================= 6 === Level 4 ========================= //
 		if (selectLevel == 4) {
 			cout << "Level 4 :" << endl;
+			currentLevel.instruction = "从第二个数开始，输出当前数与上一个数的差值，一直重复，直到输入结束。\n\n可用指令集：inbox, outbox, copyto, copyfrom, add, sub, jump, jumpifzero\n\n可用空地数：3";
 			currentLevel.input = {5, 3, 8, 2, -4};
 			currentLevel.expectedOutput = {-2, 5, -6, -6};
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			currentLevel.floor = {0,0};
-			currentLevel.floorAvailable = {true,true};
+			currentLevel.floor = {-10000,-10000, -100000, -100000};
+			currentLevel.floorAvailable = {true,true, false, false};
 			currentLevel.currentLevel = 4;
 			setGameState(currentLevel, ui);
 		}	

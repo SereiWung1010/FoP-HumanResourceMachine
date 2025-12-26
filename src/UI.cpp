@@ -90,8 +90,10 @@ vector<string> UI::returnCommandContent(int max) {
 string UI::formatInt(int value) {
     string s;
 
-    if (value == -100) {
+    if (value == -10000) {
         s = "   ";
+    } else if (value == -100000) {
+        s = " X ";
     } else { 
         s = to_string(value);
         if (s.length() >= 3) {
@@ -161,6 +163,8 @@ void UI::displayUI() {
     vector<std::string> commandContent = returnCommandContent(17);
 
     cout << "Level information: " << state.level;
+    cout << std::string(2, '\n');
+    cout << state.instruction;
     cout << std::string(4, '\n');
 
     cout << string(5, ' ') << "+---+"

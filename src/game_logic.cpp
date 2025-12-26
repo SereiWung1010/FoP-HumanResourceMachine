@@ -20,7 +20,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
     vector<bool> floorAvailable = lvl.floorAvailable;
 
     bool hasCurrentBlock = false;
-    int currentBlock = -100;
+    int currentBlock = -10000;
 
     int n; // numOfInstruction
     while (true) {  // validate input
@@ -33,7 +33,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             cin.ignore(10000, '\n'); // consume leftover newline
             break;
         }
-    } // ✅ close the validation loop
+    }
 
     vector<string> Instruction(n);
 
@@ -66,6 +66,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 
     // ===== 设置UI初始状态 =====
     UI::GameState uiState;
+	uiState.instruction = lvl.instruction;
     uiState.input = input;
     uiState.output = {};
     uiState.field = floor;
@@ -100,7 +101,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             if (input.empty()) {
                 break;
             }
-			
+
 			currentBlock = input.front();
             input.erase(input.begin());
             hasCurrentBlock = true;
@@ -122,6 +123,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             ui.clearScreen();
             ui.moveTo(4);
             ui.setOutput(output);
+			ui.setCurrentBlock(-10000);
         }
         else if (cmd == "add") {
             if (!hasCurrentBlock || X < 0 || X >= (int)floor.size() || floorAvailable[X]) {
@@ -180,14 +182,9 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
                 return INSTRUCTION_ERROR;
             }
 
-            ui.setCurrentCommand(X - 1);
-            ui.clearScreen();
-            ui.displayUI();
-
             this_thread::sleep_for(chrono::milliseconds(500));
 
             ip = X - 1;
-            ui.clearScreen();
             continue;
         }
         else if (cmd == "jumpifzero") {
@@ -197,14 +194,10 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             }
 
             if (currentBlock == 0) {
-                ui.setCurrentCommand(X - 1);
-                ui.clearScreen();
-                ui.displayUI();
 
                 this_thread::sleep_for(chrono::milliseconds(500));
 
                 ip = X - 1;
-                ui.clearScreen();
                 continue;
             }
         }
@@ -218,6 +211,8 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
         ip++;
     }
 
+	ui.moveTo(0);
+
     // ===== verify =====
     if (output == lvl.expectedOutput && input.empty()) {
         ofstream outputFile("lastLevel.txt");
@@ -227,7 +222,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
             return SUCCESS;
         } else {
             cerr << "A file could not be created. Please try again later.";
-            return FAIL; // ✅ ensure every path returns something
+            return FAIL;
         }
     } else {
         return FAIL;
