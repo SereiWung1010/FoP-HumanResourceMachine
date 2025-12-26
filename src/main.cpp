@@ -40,7 +40,7 @@ void setGameState(const level &lvl, UI& ui) {
     uiState.output = {};
     uiState.field = lvl.floor;
     uiState.code ={};
-    uiState.currentBlock = 0;
+    uiState.currentBlock = -100;
     uiState.currentCommand = 0;
     uiState.level = lvl.currentLevel;
     ui.setGameState(uiState);
@@ -97,6 +97,7 @@ int main() {
 			currentLevel.instructionAvailable = {"inbox", "outbox"};
 			currentLevel.floor = {};
 			currentLevel.floorAvailable = {};
+			currentLevel.currentLevel = 1;
 			setGameState(currentLevel, ui);
 		}
 
@@ -108,6 +109,7 @@ int main() {
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {0,0,0};
 			currentLevel.floorAvailable = {true, true, true};
+			currentLevel.currentLevel = 2;
 			setGameState(currentLevel, ui);
 		}
 
@@ -119,6 +121,7 @@ int main() {
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {0,0,0};
 			currentLevel.floorAvailable = {true, true, true};
+			currentLevel.currentLevel = 3;
 			setGameState(currentLevel, ui);
 		}		
 
@@ -130,8 +133,10 @@ int main() {
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {0,0};
 			currentLevel.floorAvailable = {true,true};
+			currentLevel.currentLevel = 4;
 			setGameState(currentLevel, ui);
 		}	
+
 
 		LevelStatus result = playLevel(currentLevel, ui);
 
@@ -140,7 +145,7 @@ int main() {
 			lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
 		} else if (result == FAIL) {
 			cout << "Fail" << endl;
-		}
+		} 
 	}
 	return 0;
 }
