@@ -117,7 +117,7 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
                 return INSTRUCTION_ERROR;
             }
 
-            output.push_back(currentBlock);
+            output.insert(output.begin(), currentBlock);
             hasCurrentBlock = false;
 
             ui.clearScreen();

@@ -9,6 +9,7 @@ enum LevelStatus { SUCCESS, FAIL, INSTRUCTION_ERROR };
 struct level {
 	std::string instruction;
 	std::vector<int> input;
+	std::vector<int> correctOutput;
 	std::vector<int> expectedOutput;
 	std::vector<int> floor; // consider using an array
 	std::vector<bool> floorAvailable;

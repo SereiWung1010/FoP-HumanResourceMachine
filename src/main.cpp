@@ -95,7 +95,11 @@ int main() {
 			cout << "\nLevel 1 :" << endl;
 			currentLevel.instruction = "让机器人取出输入序列上的每个积木放入输出序列中。\n\n可用指令集：inbox, outbox\n\n可用空地数：0";
 			currentLevel.input = {1, 2};
-			currentLevel.expectedOutput = {1, 2};
+			currentLevel.correctOutput = {1, 2};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
 			currentLevel.instructionAvailable = {"inbox", "outbox"};
 			currentLevel.floor = {-100000, -100000, -100000, -100000};
 			currentLevel.floorAvailable = {false, false, false, false};
@@ -108,7 +112,11 @@ int main() {
 			cout << "\nLevel 2 :" << endl;
 			currentLevel.instruction = "对于输入序列中的每两个东西，先把第1个减去第2个，并把结果放在输出序列中，然后把第2个减去第1个，再把结果放在输出序列中，重复。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
 			currentLevel.input = {3, 9, 5, 1, -2, -2, 9, -9};
-			currentLevel.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
+			currentLevel.correctOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {-10000,-10000,-10000, -100000};
 			currentLevel.floorAvailable = {true, true, true, false};
@@ -121,7 +129,11 @@ int main() {
 			cout << "\nLevel 3 :" << endl;
 			currentLevel.instruction = "从输入序列中依次取2个数字，如果相等则将其中一个输出，否则扔掉。重复这个过程直到输入传送带为空。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
 			currentLevel.input = {6, 2, 7, 7, -9, 3, -3, -3};
-			currentLevel.expectedOutput = {7, -3};
+			currentLevel.correctOutput = {7, -3};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {-10000,-10000,-10000, -100000};
 			currentLevel.floorAvailable = {true, true, true};
@@ -132,9 +144,13 @@ int main() {
 		// ========================= 6 === Level 4 ========================= //
 		if (selectLevel == 4) {
 			cout << "Level 4 :" << endl;
-			currentLevel.instruction = "从第二个数开始，输出当前数与上一个数的差值，一直重复，直到输入结束。\n\n可用指令集：inbox, outbox, copyto, copyfrom, add, sub, jump, jumpifzero\n\n可用空地数：3";
+			currentLevel.instruction = "从第二个数开始，输出当前数与上一个数的差值，一直重复，直到输入结束。\n\n可用指令集：inbox, outbox, copyto, copyfrom, add, sub, jump, jumpifzero\n\n可用空地数：2";
 			currentLevel.input = {5, 3, 8, 2, -4};
-			currentLevel.expectedOutput = {-2, 5, -6, -6};
+			currentLevel.correctOutput = {-2, 5, -6, -6};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
 			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
 			currentLevel.floor = {-10000,-10000, -100000, -100000};
 			currentLevel.floorAvailable = {true,true, false, false};
