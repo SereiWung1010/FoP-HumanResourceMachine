@@ -12,6 +12,7 @@ public:
         std::vector<int> output;
         std::vector<int> field;
         std::vector<std::string> code;
+        std::string instruction;
         int currentBlock;
         int currentCommand;
         int level;

@@ -36,11 +36,12 @@ void setGameState(const level &lvl, UI& ui) {
 	// ===== 设置UI初始状态 =====
     // 创建UI状态对象并初始化
     UI::GameState uiState;
+	uiState.instruction = lvl.instruction;
     uiState.input = lvl.input;
     uiState.output = {};
     uiState.field = lvl.floor;
     uiState.code ={};
-    uiState.currentBlock = 0;
+    uiState.currentBlock = -10000;
     uiState.currentCommand = 0;
     uiState.level = lvl.currentLevel;
     ui.setGameState(uiState);
@@ -50,6 +51,7 @@ void setGameState(const level &lvl, UI& ui) {
 
 int main() {
     UI ui;  // 创建UI对象用于显示游戏界面
+	level currentLevel;
 
 	// ========================= 1 === Intro Interface / Level Selection ========================= //
 
@@ -91,73 +93,80 @@ int main() {
 		// ========================= 3 === Level 1 ========================= //
 		if (selectLevel == 1) {
 			cout << "\nLevel 1 :" << endl;
-
-			level LevelOne;
-			LevelOne.input = {1, 2};
-			LevelOne.expectedOutput = {1, 2};
-			LevelOne.instructionAvailable = {"inbox", "outbox"};
-			LevelOne.floor = {};
-			LevelOne.floorAvailable = {};
-            LevelOne.currentLevel = 1;
-
-			setGameState(LevelOne, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelOne, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 2; //last level here 代表 not completed yet, you were here, now continue
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.instruction = "让机器人取出输入序列上的每个积木放入输出序列中。\n\n可用指令集：inbox, outbox\n\n可用空地数：0";
+			currentLevel.input = {1, 2};
+			currentLevel.correctOutput = {1, 2};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
+			currentLevel.instructionAvailable = {"inbox", "outbox"};
+			currentLevel.floor = {-100000, -100000, -100000, -100000};
+			currentLevel.floorAvailable = {false, false, false, false};
+			currentLevel.currentLevel = 1;
+			setGameState(currentLevel, ui);
 		}
 
 		// ========================= 4 === Level 2 ========================= //
 		if (selectLevel == 2) {
 			cout << "\nLevel 2 :" << endl;
-
-			level LevelTwo;
-			LevelTwo.input = {3, 9, 5, 1, -2, -2, 9, -9};
-			LevelTwo.expectedOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
-			LevelTwo.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelTwo.floor = {0,0,0};
-			LevelTwo.floorAvailable = {true, true, true};
-            LevelTwo.currentLevel = 2;
-
-			setGameState(LevelTwo, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelTwo, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "SUCCESS" << endl;
-				lastLevel = 3;
-			} else if (result == FAIL) {
-				cout << "FAIL" << endl;
-			}
+			currentLevel.instruction = "对于输入序列中的每两个东西，先把第1个减去第2个，并把结果放在输出序列中，然后把第2个减去第1个，再把结果放在输出序列中，重复。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
+			currentLevel.input = {3, 9, 5, 1, -2, -2, 9, -9};
+			currentLevel.correctOutput = {-6, 6, 4, -4, 0, 0, 18, -18};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {-10000,-10000,-10000, -100000};
+			currentLevel.floorAvailable = {true, true, true, false};
+			currentLevel.currentLevel = 2;
+			setGameState(currentLevel, ui);
 		}
 
 		// ========================= 5 === Level 3 ========================= //
 		if (selectLevel == 3) {
 			cout << "\nLevel 3 :" << endl;
-
-			level LevelThree;
-			LevelThree.input = {6, 2, 7, 7, -9, 3, -3, -3};
-			LevelThree.expectedOutput = {7, -3};
-			LevelThree.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
-			LevelThree.floor = {0,0,0};
-			LevelThree.floorAvailable = {true, true, true};
-            LevelThree.currentLevel = 3;
-
-			setGameState(LevelThree, ui);
-			//cout << (LevelOne.success ? "SUCCESS" : "FAIL"); 
-			LevelStatus result = playLevel(LevelThree, ui); // 传递UI对象给游戏逻辑
-			if (result == SUCCESS) {
-				cout << "\nSUCCESS" << endl;
-				lastLevel = 4;
-			} else if (result == FAIL) {
-				cout << "\nFAIL" << endl;
-			}
+			currentLevel.instruction = "从输入序列中依次取2个数字，如果相等则将其中一个输出，否则扔掉。重复这个过程直到输入传送带为空。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
+			currentLevel.input = {6, 2, 7, 7, -9, 3, -3, -3};
+			currentLevel.correctOutput = {7, -3};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {-10000,-10000,-10000, -100000};
+			currentLevel.floorAvailable = {true, true, true};
+			currentLevel.currentLevel = 3;
+			setGameState(currentLevel, ui);
 		}		
 
 		// ========================= 6 === Level 4 ========================= //
+		if (selectLevel == 4) {
+			cout << "Level 4 :" << endl;
+			currentLevel.instruction = "从第二个数开始，输出当前数与上一个数的差值，一直重复，直到输入结束。\n\n可用指令集：inbox, outbox, copyto, copyfrom, add, sub, jump, jumpifzero\n\n可用空地数：2";
+			currentLevel.input = {5, 3, 8, 2, -4};
+			currentLevel.correctOutput = {-2, 5, -6, -6};
+			currentLevel.expectedOutput = vector<int>(
+   				currentLevel.correctOutput.rbegin(),
+   				currentLevel.correctOutput.rend()
+			);
+			currentLevel.instructionAvailable = {"inbox", "outbox", "copyfrom", "copyto", "add", "sub", "jump", "jumpifzero"};
+			currentLevel.floor = {-10000,-10000, -100000, -100000};
+			currentLevel.floorAvailable = {true,true, false, false};
+			currentLevel.currentLevel = 4;
+			setGameState(currentLevel, ui);
+		}	
+
+
+		LevelStatus result = playLevel(currentLevel, ui);
+
+		if (result == SUCCESS) {
+			cout << "Success" << endl;
+			lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
+		} else if (result == FAIL) {
+			cout << "Fail" << endl;
+		} 
 	}
 	return 0;
 }
