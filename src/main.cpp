@@ -1,12 +1,16 @@
 #include "game_logic.h"
 #include "level.h"
 #include "UI.h"  // 添加UI头文件
+#ifdef _WIN32
+#include "windows.h"
+#endif
 #include <iostream>
 #include <vector> // vector
 #include <string> // string
 #include <cctype> // tolower()
 #include <algorithm> //find()
 #include <fstream>
+
 // #include <limits> //cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 后期发现是电脑问题，并不需要这个
 using namespace std;
 
@@ -50,7 +54,10 @@ void setGameState(const level &lvl, UI& ui) {
 }
 
 int main() {
-    UI ui;  // 创建UI对象用于显示游戏界面
+	#ifdef _WIN32
+		SetConsoleOutputCP(65001);  // set Windows console code page to UTF-8
+	#endif
+	UI ui;  // 创建UI对象用于显示游戏界面
 	level currentLevel;
 
 	// ========================= 1 === Intro Interface / Level Selection ========================= //
@@ -72,7 +79,7 @@ int main() {
 		// 特意查了一下，是 cin 的问题。解决方法如下 ↓
 
 		if (!(cin >> selectLevel)) { // (ZJS) 搞了半天你小子也在输入啊 （愤怒）
-			cout << "Please Enter a Number\n";
+			cout << "\nPlease Enter a Number\n";
 			cin.clear(); // 就是 clear
 			cin.ignore(10000, '\n'); // 如果乱输入，可把前 10000 字符忽略 P.S 10000 既然在 continue 后还奏效？ 后续没法输入啊
 			// cin.ignore(numeric_limits<streamsize>::max(), '\n'); // (ZJS) 直接 ignore 这次 cin，源代码从网上搬过来的。问就是本人也不知道
