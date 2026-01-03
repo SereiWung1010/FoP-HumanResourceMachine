@@ -91,9 +91,9 @@ string UI::formatInt(int value) {
     string s;
 
     if (value == -10000) {
-        s = "   ";
+        s = "   "; // 空
     } else if (value == -100000) {
-        s = " X ";
+        s = " X "; // 不可用
     } else { 
         s = to_string(value);
         if (s.length() >= 3) {
@@ -125,6 +125,18 @@ int convertPosToCoord(int pos) {
         return -5;
     } else {
         return 0;
+    }
+}
+
+void UI::moveTo(int pos) {
+    int targetXCoord = convertPosToCoord(pos);
+    int step = (state.xCoord < targetXCoord) ? 1 : -1;
+
+    while (state.xCoord != targetXCoord) {
+        state.xCoord += step;
+        UI::clearScreen();
+        UI::displayUI();
+        this_thread::sleep_for(chrono::milliseconds(30));
     }
 }
 
@@ -266,16 +278,4 @@ void UI::displayUI() {
     cout << string(5, ' ') << "+---+"
               << string(48, ' ') << "| "
               << commandContent[16] << "\n\n\n";
-}
-
-void UI::moveTo(int pos) {
-    int targetXCoord = convertPosToCoord(pos);
-    int step = (state.xCoord < targetXCoord) ? 1 : -1;
-
-    while (state.xCoord != targetXCoord) {
-        state.xCoord += step;
-        UI::clearScreen();
-        UI::displayUI();
-        this_thread::sleep_for(chrono::milliseconds(30));
-    }
 }

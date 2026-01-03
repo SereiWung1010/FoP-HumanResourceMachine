@@ -1,17 +1,16 @@
 #include "game_logic.h"
 #include "level.h"
-#include "UI.h"  // 添加UI头文件
+#include "UI.h"
 #ifdef _WIN32
 #include "windows.h"
 #endif
 #include <iostream>
-#include <vector> // vector
-#include <string> // string
-#include <cctype> // tolower()
-#include <algorithm> //find()
+#include <vector>
+#include <string>
+#include <cctype>
+#include <algorithm>
 #include <fstream>
 
-// #include <limits> //cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 后期发现是电脑问题，并不需要这个
 using namespace std;
 
 int getLastLevel() {
@@ -60,23 +59,15 @@ int main() {
 	UI ui;  // 创建UI对象用于显示游戏界面
 	level currentLevel;
 
-	// ========================= 1 === Intro Interface / Level Selection ========================= //
+	// ============================ Intro Interface / Level Selection ========================= //
 
 	while (true) {
         int selectLevel;
         int lastLevel = getLastLevel();
         ui.displayIntro(lastLevel);
 		cout << "\n\nPlease Select Your Level : ";
-		// cin >> selectLevel; //下面有 cin 了
-		// ===== verify Level Completiton Status =====
-		// cout << ((selectLevel > lastLevel)? "Level Locked" : 0 ); // Atp 1. I don't have else, so I put 0 as dummy exp; Atp 2. OMG, I forgot that we have else, AND IT'S THE CODE FOR THE GAME WE ARE GONNA PLAY
 
-		// if (selectLevel < 1 || selectLevel > 4) {
-		// 	cout << "Level doesn't exist" << endl;
-		// 	continue;
-		// } // (ZJS) 刚才误触把 gibberish 输入 level 结果把我内存干崩溃了， 笑死！ 
-		// P.S 以为这样就行，但不行。(不代表没用，只是解决的是别的方法）。
-		// 特意查了一下，是 cin 的问题。解决方法如下 ↓
+		// ===== verify Level Completiton Status =====
 
 		if (!(cin >> selectLevel)) { // (ZJS) 搞了半天你小子也在输入啊 （愤怒）
 			cout << "\nPlease Enter a Number\n";
@@ -97,7 +88,7 @@ int main() {
 			continue;
 		}
 
-		// ========================= 3 === Level 1 ========================= //
+		// ============================ Level 1 ========================= //
 		if (selectLevel == 1) {
 			cout << "\nLevel 1 :" << endl;
 			currentLevel.instruction = "让机器人取出输入序列上的每个积木放入输出序列中。\n\n可用指令集：inbox, outbox\n\n可用空地数：0";
@@ -114,7 +105,7 @@ int main() {
 			setGameState(currentLevel, ui);
 		}
 
-		// ========================= 4 === Level 2 ========================= //
+		// ============================ Level 2 ========================= //
 		if (selectLevel == 2) {
 			cout << "\nLevel 2 :" << endl;
 			currentLevel.instruction = "对于输入序列中的每两个东西，先把第1个减去第2个，并把结果放在输出序列中，然后把第2个减去第1个，再把结果放在输出序列中，重复。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
@@ -131,7 +122,7 @@ int main() {
 			setGameState(currentLevel, ui);
 		}
 
-		// ========================= 5 === Level 3 ========================= //
+		// ============================ Level 3 ========================= //
 		if (selectLevel == 3) {
 			cout << "\nLevel 3 :" << endl;
 			currentLevel.instruction = "从输入序列中依次取2个数字，如果相等则将其中一个输出，否则扔掉。重复这个过程直到输入传送带为空。\n\n可用指令集：inbox, outbox, copyfrom, copyto, add, sub, jump, jumpifzero\n\n可用空地数：3";
@@ -148,7 +139,7 @@ int main() {
 			setGameState(currentLevel, ui);
 		}		
 
-		// ========================= 6 === Level 4 ========================= //
+		// ============================ Level 4 ========================= //
 		if (selectLevel == 4) {
 			cout << "Level 4 :" << endl;
 			currentLevel.instruction = "从第二个数开始，输出当前数与上一个数的差值，一直重复，直到输入结束。\n\n可用指令集：inbox, outbox, copyto, copyfrom, add, sub, jump, jumpifzero\n\n可用空地数：2";
@@ -170,7 +161,7 @@ int main() {
 
 		if (result == SUCCESS) {
 			cout << "Success" << endl;
-			lastLevel = selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
+			lastLevel = (lastLevel > selectLevel) ? lastLevel : selectLevel + 1; //last level here 代表 not completed yet, you were here, now continue
 		} else if (result == FAIL) {
 			cout << "Fail" << endl;
 		} 

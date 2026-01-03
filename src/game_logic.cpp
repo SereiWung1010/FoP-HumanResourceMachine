@@ -215,10 +215,17 @@ LevelStatus playLevel(const level &lvl, UI& ui) {
 
     // ===== verify =====
     if (output == lvl.expectedOutput && input.empty()) {
-        ofstream outputFile("lastLevel.txt");
-        if (outputFile.is_open()) {
-            outputFile << (lvl.currentLevel + 1);
-            outputFile.close();
+        ifstream inputFile("lastLevel.txt");
+        if (inputFile) {
+            int lastLevel;
+            while (inputFile >> lastLevel) {
+                if (lastLevel < lvl.currentLevel + 1) {
+                    ofstream outputFile("lastLevel.txt");
+                    outputFile << (lvl.currentLevel + 1);
+                    outputFile.close();
+                }
+            }
+            inputFile.close();
             return SUCCESS;
         } else {
             cerr << "A file could not be created. Please try again later.";
